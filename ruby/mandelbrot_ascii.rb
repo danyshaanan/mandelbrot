@@ -3,7 +3,7 @@
 require 'Complex'
 
 $ascii = '.`,;:clodxkO0KXNWM'
-pixel_size = 20*2
+pixel_size = 16*2
 uclid_size = 4.0
 asft, bsft = -0.0,-0.6
 u2p = uclid_size/pixel_size
@@ -21,5 +21,5 @@ yA.each do |y|
     print (n<mn ? $ascii[$ascii.length * Math.sin(n-Math.log(c.abs))] : ' ')*2
   end
   puts
-end  
+end
 
