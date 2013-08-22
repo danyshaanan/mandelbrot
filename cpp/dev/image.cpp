@@ -7,29 +7,25 @@
 
 int createImage(int w, int h) {
 
-    int yres = 100;
-
     FILE *f;
     unsigned char *img = NULL;
-    int filesize = 54 + 3*w*h;  //w is your image width, h is image height, both int
+    int filesize = 54 + 3*w*h;
     if( img )
         free( img );
     img = (unsigned char *)malloc(3*w*h);
     // memset(img,0,sizeof(img));
 
-    for(int i=0; i<w; i++) {
-        for(int j=0; j<h; j++) {
-            int x=i;
-            int y=(yres-1)-j;
-            int r = 5;
-            int g = 255;
-            int b = 5;
-            if (r > 255) r=255;
-            if (g > 255) g=255;
-            if (b > 255) b=255;
-            img[(x+y*w)*3+2] = (unsigned char)(r);
-            img[(x+y*w)*3+1] = (unsigned char)(g);
-            img[(x+y*w)*3+0] = (unsigned char)(b);
+    for(int px=0; px<w; px++) {
+        for(int py=0; py<h; py++) {
+
+            int r = px;
+            int g = py;
+            int b = 0;
+
+            int loc = (px+py*w)*3;
+            img[loc+2] = (unsigned char)(r);
+            img[loc+1] = (unsigned char)(g);
+            img[loc+0] = (unsigned char)(b);
         }
     }
 
@@ -65,7 +61,7 @@ int createImage(int w, int h) {
 
 int main(void) {
 
-    createImage(100,100);
+    createImage(320,320);
 
 }
 
