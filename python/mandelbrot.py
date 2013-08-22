@@ -24,4 +24,6 @@ for (b,imag) in bimag:
       n += 1
     if n<rounds:
       pixel[a,b] = 127+127*math.sin(n - math.log(abs(v),radius)) if continuous else 6*n
+
 image.show()
+# image.save("mandelbrot.png")
