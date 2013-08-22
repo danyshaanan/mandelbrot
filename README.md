@@ -14,3 +14,7 @@
 * flash :|
 * excel(!)
 * ?
+
+##### TODOs:
+
+* Add output images to each language.
