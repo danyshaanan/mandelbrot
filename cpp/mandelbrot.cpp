@@ -29,6 +29,13 @@ int iterationsToEscape(double x, double y, int maxIterations) {
     return -1;
 }
 
+int hue2rgb(int t){
+    t = t%360;
+    if (t < 60) return 255.*t/60.;
+    if (t < 180) return 255;
+    if (t < 240) return 255. * (4. - t/60.);
+    return 0;
+}
 
 int createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h) {
     if (w > maxSize) w = maxSize;
@@ -58,9 +65,10 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
             if (iterations == -1) {
                 r = g = b = 0;
             } else {
-                r = 16*(iterations+ 0)%256;
-                g = 16*(iterations+ 5)%256;
-                b = 16*(iterations+10)%256;
+                float h = 360.0 * iterations/maxIterations;
+                r = hue2rgb(h + 120);
+                g = hue2rgb(h);
+                b = hue2rgb(h + 240);
             }
 
             int loc = (px+py*w)*3;
