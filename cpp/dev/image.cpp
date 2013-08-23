@@ -5,6 +5,12 @@
 #include <stdlib.h>     /* malloc, free, rand */
 
 
+
+int iterationsToEscape(float x, float y, int maxIterations) {
+    return x;
+}
+
+
 int createImage(int w, int h) {
 
     FILE *f;
@@ -18,9 +24,18 @@ int createImage(int w, int h) {
     for(int px=0; px<w; px++) {
         for(int py=0; py<h; py++) {
 
-            int r = px;
-            int g = py;
-            int b = 0;
+            int r, g, b;
+
+            int iterations = iterationsToEscape(px, py, 10);
+            if (iterations == -1) {
+                r = 0;
+                g = 0;
+                b = 0;
+            } else {
+                r = iterations;
+                g = 255 - iterations;
+                b = 0;
+            }
 
             int loc = (px+py*w)*3;
             img[loc+2] = (unsigned char)(r);
