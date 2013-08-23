@@ -47,7 +47,7 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
         xs[px] = (px - w/2)/zoom + centerX;
     }
     for (int py=0; py<h; py++) {
-        ys[py] = (py - h/2)/zoom - centerY;
+        ys[py] = (py - h/2)/zoom + centerY;
     }
 
     for (int px=0; px<w; px++) {
@@ -100,11 +100,11 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
 
 
 int main(void) {
-    double centerX = -1.149719506110225;
-    double centerY = -0.312197910519423;
-    double zoom = 2000000;
+    double centerX = -1.186340599860225;
+    double centerY = -0.303652988644423;
+    double zoom = 40000;
     int iterations = 300;
-    createImage(centerX, centerY, zoom, iterations, 640, 640);
+    createImage(centerX, centerY, zoom, iterations, 700, 700);
 }
 
 /////////////////////////////////////////////////////////////////////////////
