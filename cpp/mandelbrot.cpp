@@ -37,43 +37,8 @@ int hue2rgb(int t){
     return 0;
 }
 
-int createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h) {
-    if (w > maxSize) w = maxSize;
-    if (h > maxSize) h = maxSize;
-
-    unsigned char *img = NULL;
-    int pixels = 3*w*h;
-    int filesize = 54 + pixels;
-    if (img) free(img);
-    img = (unsigned char *)malloc(pixels);
-
-    double xs[maxSize], ys[maxSize];
-    for (int px=0; px<w; px++) {
-        xs[px] = (px - w/2)/zoom + centerX;
-    }
-    for (int py=0; py<h; py++) {
-        ys[py] = (py - h/2)/zoom + centerY;
-    }
-
-    unsigned char r, g, b;
-    for (int px=0; px<w; px++) {
-        for (int py=0; py<h; py++) {
-            r = g = b = 0;
-            int iterations = iterationsToEscape(xs[px], ys[py], maxIterations);
-            if (iterations != -1) {
-                int h = 360.0 * iterations/maxIterations;
-                r = hue2rgb(h + 120);
-                g = hue2rgb(h);
-                b = hue2rgb(h + 240);
-            }
-
-            int loc = (px+py*w)*3;
-            img[loc+2] = (unsigned char)(r);
-            img[loc+1] = (unsigned char)(g);
-            img[loc+0] = (unsigned char)(b);
-        }
-    }
-
+void writeImage(unsigned char *img, int w, int h) {
+    int filesize = 54 + 3*w*h;
     unsigned char bmpfileheader[14] = {'B','M', 0,0,0,0, 0,0, 0,0, 54,0,0,0};
     unsigned char bmpinfoheader[40] = {40,0,0,0, 0,0,0,0, 0,0,0,0, 1,0, 24,0};
     unsigned char bmppad[3] = {0,0,0};
@@ -101,6 +66,42 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
         fwrite(bmppad,1,(4-(w*3)%4)%4,f);
     }
     fclose(f);
+}
+
+int createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h) {
+    if (w > maxSize) w = maxSize;
+    if (h > maxSize) h = maxSize;
+
+    unsigned char r, g, b;
+    unsigned char *img = NULL;
+    if (img) free(img);
+    img = (unsigned char *)malloc(3*w*h);
+
+    double xs[maxSize], ys[maxSize];
+    for (int px=0; px<w; px++) {
+        xs[px] = (px - w/2)/zoom + centerX;
+    }
+    for (int py=0; py<h; py++) {
+        ys[py] = (py - h/2)/zoom + centerY;
+    }
+
+    for (int px=0; px<w; px++) {
+        for (int py=0; py<h; py++) {
+            r = g = b = 0;
+            int iterations = iterationsToEscape(xs[px], ys[py], maxIterations);
+            if (iterations != -1) {
+                int h = 360.0 * iterations/maxIterations;
+                r = hue2rgb(h + 120);
+                g = hue2rgb(h);
+                b = hue2rgb(h + 240);
+            }
+            int loc = (px+py*w)*3;
+            img[loc+2] = (unsigned char)(r);
+            img[loc+1] = (unsigned char)(g);
+            img[loc+0] = (unsigned char)(b);
+        }
+    }
+    writeImage(img, w, h);
 }
 
 
