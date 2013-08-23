@@ -8,51 +8,44 @@
  */
 
 #include <math.h>
-#include <stdio.h>   	         //4.1.3   v2.1  tofix 'f'.
-#include <stdlib.h>     /* malloc, free, rand */
-// #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 
 
-// #include <conio.h>
-// #include <graphics.h>
-
-int main(void);
-int createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h);
-int iterationsToEscape(double x, double y, int maxIterations);
-
-////////////////////
-
-int main(void) {
-    double centerX = -1.149719506110225;
-    double centerY = -0.312197910519423;
-    double zoom = 2000000000000;
-    int iterations = 300;
-    createImage(centerX, centerY, zoom, iterations, 640,640);
+int iterationsToEscape(double x, double y, int maxIterations) {
+    int i;
+    double tempa;
+    double a = 0;
+    double b = 0;
+    for (i = 0 ; i < maxIterations ; i++) {
+        tempa = a*a - b*b + x;
+        b = 2*a*b + y;
+        a = tempa;
+        if (a*a+b*b > 4) {
+            return i;
+        }
+    }
+    return -1;
 }
 
-int createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h) {
 
+int createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h) {
     FILE *f;
     unsigned char *img = NULL;
     int filesize = 54 + 3*w*h;
-    if( img )
-        free( img );
+    if (img) {
+        free(img);
+    }
     img = (unsigned char *)malloc(3*w*h);
-    // memset(img,0,sizeof(img));
-
-    for(int px=0; px<w; px++) {
-        for(int py=0; py<h; py++) {
+    for (int px=0; px<w; px++) {
+        for (int py=0; py<h; py++) {
 
             int r, g, b;
-
             double x = (px - w/2)/zoom + centerX;
             double y = (py - h/2)/zoom - centerY;
-
             int iterations = iterationsToEscape(x, y, maxIterations);
             if (iterations == -1) {
-                r = 0;
-                g = 0;
-                b = 0;
+                r = g = b = 0;
             } else {
                 r = 16*(iterations+ 0)%255;
                 g = 16*(iterations+ 5)%255;
@@ -87,8 +80,7 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
     f = fopen("temp.bmp","wb");
     fwrite(bmpfileheader,1,14,f);
     fwrite(bmpinfoheader,1,40,f);
-    for(int i=0; i<h; i++)
-    {
+    for (int i=0; i<h; i++) {
         fwrite(img+(w*(h-i-1)*3),3,w,f);
         fwrite(bmppad,1,(4-(w*3)%4)%4,f);
     }
@@ -96,23 +88,13 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
 }
 
 
-int iterationsToEscape(double x, double y, int maxIterations) {
-    int i;
-    double tempa;
-    double a = 0;
-    double b = 0;
-    for (i = 0 ; i < maxIterations ; i++) {
-        tempa = a*a - b*b + x;
-        b = 2*a*b + y;
-        a = tempa;
-        if (a*a+b*b > 4) {
-
-            return i;
-        }
-    }
-    return -1;
+int main(void) {
+    double centerX = -1.149719506110225;
+    double centerY = -0.312197910519423;
+    double zoom = 2000000000000;
+    int iterations = 300;
+    createImage(centerX, centerY, zoom, iterations, 640,640);
 }
-
 
 // void draw(int fpix,int fpush) {
 
@@ -151,71 +133,13 @@ int iterationsToEscape(double x, double y, int maxIterations) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-// void draw(int,int);
-
-// int
-//     intrange = 1,
-//     powrun,
-//     run = 8,
-//     cl[16],
-//     n,
-//     j,
-//     i,
-//     c = -1,
-//     lsz = 1000;
-
-// long double
-//     x = 0,
-//     y = 0,
-//     range = 4,
-//     temp,
-//     si,
-//     sj[480],
-//     za,
-//     zb;
-
-// void putpixel(int i,int j,int c) {
-//     if (j == 0) printf("\n");
-//     printf("%i%i", c%10, c%10);
-// }
-
-
 
 // int mainDEP(void) {
-
-//     // createImage(100,100);
-
-//     // int gdriver = DETECT;
-//     // int gmode;
-//     // int errorcode;
-//     // initgraph(&gdriver, &gmode, "");
-//     // flushall();
-//     cl[0]=15;
-//     cl[1]= 7;
-//     cl[2]=14;
-//     cl[3]= 6;
-//     cl[4]=13;
-//     cl[5]= 5;
-//     cl[6]=12;
-//     cl[7]= 4;
-//     cl[8]=11;
-//     cl[9]= 3;
-//     cl[10]=10;
-//     cl[11]= 2;
-//     cl[12]= 9;
-//     cl[13]= 1;
-//     cl[14]= 8;
-//     cl[15]= 0;
 
 //     printf("\n\n\n\n\n\n\n\n\tthis is a program of the mandelbrot group\n");
 //     // printf("\t   a=left,d=right\n\t   w=up,s=down\n");
 //     // printf("\t   z=zoonin,x=zoomout\n\t   r=+accuracy,e=-accuracy\n");
 //     // printf("\t   o=from the start\n\t   Space=Redraw\n\n\t   q-quit\n");
-
-
-//     // draw(lsz,80);
-
-//     draw(50,40);
 
 //     // while (c!='q') {
 //     //         if (c==32) {
@@ -242,41 +166,5 @@ int iterationsToEscape(double x, double y, int maxIterations) {
 //     //         }
 //     //         c=getch();
 //     // }
-// }
-
-
-
-    //while (!kbhit() ) {} --------...?
-
-// void draw(int fpix,int fpush) {
-
-//     powrun = pow(2,run);
-//     range = 4;
-
-//     for(j=1 ; j<intrange ; j++) {
-//         range=range/2;
-//     }
-
-//     for(j=0 ; j<fpix ; j++) {
-//         sj[j] = y + j*range/fpix - range/2;
-//     }
-
-//     for(i=0 ; i<fpix ; i++) {
-//         si = x + i*range/fpix - range/2;
-//         for (j=0 ; j<fpix ; j++) {
-//             za = 0;
-//             zb = 0;
-//             for (n=0 ; 4>za*za+zb*zb && n!=powrun ; n++) {
-//                 temp=za;
-//                 za = za*za - zb*zb + si;
-//                 zb = 2*temp*zb + sj[j];
-//             }
-//             if (n!=powrun) {
-//                 putpixel(i+fpush,j,cl[n%16]);
-//             } else {
-//                 putpixel(i+fpush,j,0);
-//             }
-//         }
-//     }
 // }
 
