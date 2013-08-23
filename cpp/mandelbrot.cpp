@@ -17,20 +17,20 @@
 // #include <graphics.h>
 
 int main(void);
-int createImage(float centerX, float centerY, float zoom, int maxIterations, int w, int h);
-int iterationsToEscape(float x, float y, int maxIterations);
+int createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h);
+int iterationsToEscape(double x, double y, int maxIterations);
 
 ////////////////////
 
 int main(void) {
-    float centerX = -0.56;
-    float centerY = 0.64;
-    float zoom = 8000;
-    int iterations = 50;
+    double centerX = -1.149719506110225;
+    double centerY = -0.312197910519423;
+    double zoom = 2000000000000;
+    int iterations = 300;
     createImage(centerX, centerY, zoom, iterations, 640,640);
 }
 
-int createImage(float centerX, float centerY, float zoom, int maxIterations, int w, int h) {
+int createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h) {
 
     FILE *f;
     unsigned char *img = NULL;
@@ -54,9 +54,9 @@ int createImage(float centerX, float centerY, float zoom, int maxIterations, int
                 g = 0;
                 b = 0;
             } else {
-                r = 10*iterations%255;
-                g = 255 - r;
-                b = 0;
+                r = 16*(iterations+ 0)%255;
+                g = 16*(iterations+ 5)%255;
+                b = 16*(iterations+10)%255;
             }
 
             int loc = (px+py*w)*3;
@@ -96,11 +96,11 @@ int createImage(float centerX, float centerY, float zoom, int maxIterations, int
 }
 
 
-int iterationsToEscape(float x, float y, int maxIterations) {
+int iterationsToEscape(double x, double y, int maxIterations) {
     int i;
-    float tempa;
-    float a = 0;
-    float b = 0;
+    double tempa;
+    double a = 0;
+    double b = 0;
     for (i = 0 ; i < maxIterations ; i++) {
         tempa = a*a - b*b + x;
         b = 2*a*b + y;
