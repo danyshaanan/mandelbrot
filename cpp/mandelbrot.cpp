@@ -17,16 +17,20 @@
 // #include <graphics.h>
 
 int main(void);
-int createImage(int w, int h, int maxIterations);
+int createImage(float centerX, float centerY, float zoom, int maxIterations, int w, int h);
 int iterationsToEscape(float x, float y, int maxIterations);
 
 ////////////////////
 
 int main(void) {
-    createImage(640,640, 100);
+    float centerX = -0.56;
+    float centerY = 0.64;
+    float zoom = 8000;
+    int iterations = 50;
+    createImage(centerX, centerY, zoom, iterations, 640,640);
 }
 
-int createImage(int w, int h, int maxIterations) {
+int createImage(float centerX, float centerY, float zoom, int maxIterations, int w, int h) {
 
     FILE *f;
     unsigned char *img = NULL;
@@ -41,8 +45,8 @@ int createImage(int w, int h, int maxIterations) {
 
             int r, g, b;
 
-            double x = 4.0*px/w-2.0;
-            double y = 4.0*py/h-2.0;
+            double x = (px - w/2)/zoom + centerX;
+            double y = (py - h/2)/zoom - centerY;
 
             int iterations = iterationsToEscape(x, y, maxIterations);
             if (iterations == -1) {
