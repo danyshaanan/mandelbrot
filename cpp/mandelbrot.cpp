@@ -3,7 +3,7 @@
  * Author: dany
  * Created somewhen around year 1999
  *
- * TODO: rewrite all of it
+ * 2013: rewriting...
  *
  */
 
@@ -11,13 +11,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+const int maxSize = 1000;
+
 
 int iterationsToEscape(double x, double y, int maxIterations) {
-    int i;
     double tempa;
     double a = 0;
     double b = 0;
-    for (i = 0 ; i < maxIterations ; i++) {
+    for (int i = 0 ; i < maxIterations ; i++) {
         tempa = a*a - b*b + x;
         b = 2*a*b + y;
         a = tempa;
@@ -30,6 +31,9 @@ int iterationsToEscape(double x, double y, int maxIterations) {
 
 
 int createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h) {
+    if (w > maxSize) w = maxSize;
+    if (h > maxSize) h = maxSize;
+
     FILE *f;
     unsigned char *img = NULL;
     int filesize = 54 + 3*w*h;
@@ -37,19 +41,26 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
         free(img);
     }
     img = (unsigned char *)malloc(3*w*h);
+
+    double xs[maxSize], ys[maxSize];
+    for (int px=0; px<w; px++) {
+        xs[px] = (px - w/2)/zoom + centerX;
+    }
+    for (int py=0; py<h; py++) {
+        ys[py] = (py - h/2)/zoom - centerY;
+    }
+
     for (int px=0; px<w; px++) {
         for (int py=0; py<h; py++) {
 
             int r, g, b;
-            double x = (px - w/2)/zoom + centerX;
-            double y = (py - h/2)/zoom - centerY;
-            int iterations = iterationsToEscape(x, y, maxIterations);
+            int iterations = iterationsToEscape(xs[px], ys[py], maxIterations);
             if (iterations == -1) {
                 r = g = b = 0;
             } else {
-                r = 16*(iterations+ 0)%255;
-                g = 16*(iterations+ 5)%255;
-                b = 16*(iterations+10)%255;
+                r = 16*(iterations+ 0)%256;
+                g = 16*(iterations+ 5)%256;
+                b = 16*(iterations+10)%256;
             }
 
             int loc = (px+py*w)*3;
@@ -91,48 +102,12 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
 int main(void) {
     double centerX = -1.149719506110225;
     double centerY = -0.312197910519423;
-    double zoom = 2000000000000;
+    double zoom = 2000000;
     int iterations = 300;
-    createImage(centerX, centerY, zoom, iterations, 640,640);
+    createImage(centerX, centerY, zoom, iterations, 640, 640);
 }
 
-// void draw(int fpix,int fpush) {
-
-//     powrun = pow(2,run);
-//     range = 4;
-
-//     for(j=1 ; j<intrange ; j++) {
-//         range=range/2;
-//     }
-
-//     for(j=0 ; j<fpix ; j++) {
-//         sj[j] = y + j*range/fpix - range/2;
-//     }
-
-//     for(i=0 ; i<fpix ; i++) {
-//         si = x + i*range/fpix - range/2;
-//         for (j=0 ; j<fpix ; j++) {
-//             za = 0;
-//             zb = 0;
-//             for (n=0 ; 4>za*za+zb*zb && n!=powrun ; n++) {
-//                 temp=za;
-//                 za = za*za - zb*zb + si;
-//                 zb = 2*temp*zb + sj[j];
-//             }
-//             if (n!=powrun) {
-//                 putpixel(i+fpush,j,cl[n%16]);
-//             } else {
-//                 putpixel(i+fpush,j,0);
-//             }
-//         }
-//     }
-// }
-
-
-
-
 /////////////////////////////////////////////////////////////////////////////
-
 
 // int mainDEP(void) {
 
