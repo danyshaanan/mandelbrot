@@ -1,7 +1,7 @@
 /*
  * File:   main.cpp
  * Author: dany
- * Created somewhen around year 1999
+ * Created somewhen between 1999 and 2002
  *
  * 2013: rewriting...
  *
