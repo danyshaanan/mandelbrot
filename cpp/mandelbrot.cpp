@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int maxSize = 1000;
+const int maxSize = 2000;
 
 
 int iterationsToEscape(double x, double y, int maxIterations) {
@@ -41,13 +41,11 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
     if (w > maxSize) w = maxSize;
     if (h > maxSize) h = maxSize;
 
-    FILE *f;
     unsigned char *img = NULL;
-    int filesize = 54 + 3*w*h;
-    if (img) {
-        free(img);
-    }
-    img = (unsigned char *)malloc(3*w*h);
+    int pixels = 3*w*h;
+    int filesize = 54 + pixels;
+    if (img) free(img);
+    img = (unsigned char *)malloc(pixels);
 
     double xs[maxSize], ys[maxSize];
     for (int px=0; px<w; px++) {
@@ -57,15 +55,13 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
         ys[py] = (py - h/2)/zoom + centerY;
     }
 
+    unsigned char r, g, b;
     for (int px=0; px<w; px++) {
         for (int py=0; py<h; py++) {
-            int r = 0,
-                g = 0,
-                b = 0;
-
+            r = g = b = 0;
             int iterations = iterationsToEscape(xs[px], ys[py], maxIterations);
             if (iterations != -1) {
-                float h = 360.0 * iterations/maxIterations;
+                int h = 360.0 * iterations/maxIterations;
                 r = hue2rgb(h + 120);
                 g = hue2rgb(h);
                 b = hue2rgb(h + 240);
@@ -96,6 +92,7 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
     bmpinfoheader[10] = (unsigned char)(       h>>16);
     bmpinfoheader[11] = (unsigned char)(       h>>24);
 
+    FILE *f;
     f = fopen("temp.bmp","wb");
     fwrite(bmpfileheader,1,14,f);
     fwrite(bmpinfoheader,1,40,f);
