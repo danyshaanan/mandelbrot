@@ -59,12 +59,12 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
 
     for (int px=0; px<w; px++) {
         for (int py=0; py<h; py++) {
+            int r = 0,
+                g = 0,
+                b = 0;
 
-            int r, g, b;
             int iterations = iterationsToEscape(xs[px], ys[py], maxIterations);
-            if (iterations == -1) {
-                r = g = b = 0;
-            } else {
+            if (iterations != -1) {
                 float h = 360.0 * iterations/maxIterations;
                 r = hue2rgb(h + 120);
                 g = hue2rgb(h);
