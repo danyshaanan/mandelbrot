@@ -1,9 +1,12 @@
 /*
- * File:   main.cpp
- * Author: dany
- * Created somewhen between 1999 and 2002
  *
- * 2013: rewriting...
+ * File:            mandelbrot.cpp
+ * Author:          Dany Shaanan
+ * Website:         http://danyshaanan.com
+ * File location:   https://github.com/danyshaanan/mandelbrot/blob/master/cpp/mandelbrot.cpp
+ *
+ * Created somewhen between 1999 and 2002
+ * Rewriten August 2013
  *
  */
 
@@ -13,25 +16,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool curses_started = false;
-
-void endCurses() {
-    if (curses_started && !isendwin()) endwin();
-}
-
-void startCurses() {
-    if (curses_started) {
-        refresh();
-    } else {
-        initscr();
-        // cbreak();
-        // noecho();
-        intrflush(stdscr, false);
-        keypad(stdscr, true);
-        atexit(endCurses);
-        curses_started = true;
-    }
-}
+const int MAX_WIDTH_HEIGHT = 2000;
+const int HUE_PER_ITERATION = 2;
+const bool DRAW_ON_KEY = true;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -51,21 +38,13 @@ class State {
             w = 700;
             h = 700;
         }
-        void left()     { centerX -= 100.0 / zoom; }
-        void down()     { centerY += 100.0 / zoom; }
-        void right()    { centerX += 100.0 / zoom; }
-        void up()       { centerY -= 100.0 / zoom; }
+        void moveY(int change)      { centerY += change / zoom; }
+        void moveX(int change)      { centerX += change / zoom; }
         void zoomBy(double r)       { zoom *= r; }
         void addIterations(int i)   { maxIterations += i; }
-        void output() {
-            printf("%f ", centerX);
-        }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-
-const int MAX_WIDTH_HEIGHT = 2000;
-const int HUE_PER_ITERATION = 2;
 
 int iterationsToEscape(double x, double y, int maxIterations) {
     double tempa;
@@ -162,44 +141,34 @@ unsigned char *createImage(State state) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
-State state;
-
-const bool DRAW_ON_KEY = true;
-
-void draw(void) {
-    // state.output();
+void draw(State state) {
     unsigned char *img = createImage(state);
     writeImage(img, state.w, state.h);
-
-}
-
-void processChar(int ch) {
-    if (ch == 101) {} //e
-    else if (ch == 97)  state.left(); //a
-    else if (ch == 100) state.right(); //d
-    else if (ch == 115) state.down(); //s
-    else if (ch == 119) state.up(); //w
-    else if (ch == 114) state.zoomBy(2); //r
-    else if (ch == 102) state.zoomBy(0.5); //f
-    else if (ch == 116) state.addIterations(10); //t
-    else if (ch == 103) state.addIterations(-10); //g
-    // else printf("%i,", ch);
 }
 
 int main() {
-    draw();
+    State state;
+    draw(state);
     int ch = 0;
-    startCurses();
-    timeout(25);
+    initscr(); //curses
+    timeout(25); //curses ?
     while (ch != 111) { //o
-        ch = getchar();
+        ch = getchar(); //curses
         if (ch != ERR && ch != -1) {
-           processChar(ch);
-           if (DRAW_ON_KEY || ch == 101) draw(); //e
+            if (ch == 101) {} //e
+            else if (ch == 97)  state.moveX(-100); //a
+            else if (ch == 100) state.moveX(100); //d
+            else if (ch == 115) state.moveY(100); //s
+            else if (ch == 119) state.moveY(-100); //w
+            else if (ch == 114) state.zoomBy(2); //r
+            else if (ch == 102) state.zoomBy(0.5); //f
+            else if (ch == 116) state.addIterations(10); //t
+            else if (ch == 103) state.addIterations(-10); //g
+            // else printf("%i,", ch);
+            if (DRAW_ON_KEY || ch == 101) draw(state); //e
         }
     }
-    endCurses();
+    endwin(); //curses
 }
 
 
