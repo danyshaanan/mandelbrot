@@ -35,6 +35,35 @@ void startCurses() {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+class State {
+    public:
+        double centerX;
+        double centerY;
+        double zoom;
+        int maxIterations;
+        int w;
+        int h;
+        State() {
+            centerX = -1.186340599860225;
+            centerY = -0.303652988644423;
+            zoom = 400;
+            maxIterations = 100;
+            w = 700;
+            h = 700;
+        }
+        void left()     { centerX -= 100.0 / zoom; }
+        void down()     { centerY += 100.0 / zoom; }
+        void right()    { centerX += 100.0 / zoom; }
+        void up()       { centerY -= 100.0 / zoom; }
+        void zoomBy(double r)       { zoom *= r; }
+        void addIterations(int i)   { maxIterations += i; }
+        void output() {
+            printf("%f ", centerX);
+        }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
 const int MAX_WIDTH_HEIGHT = 2000;
 const int HUE_PER_ITERATION = 2;
 
@@ -92,7 +121,10 @@ void writeImage(unsigned char *img, int w, int h) {
     fclose(f);
 }
 
-unsigned char *createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h) {
+unsigned char *createImage(State state) {
+    int w = state.w;
+    int h = state.h;
+
     if (w > MAX_WIDTH_HEIGHT) w = MAX_WIDTH_HEIGHT;
     if (h > MAX_WIDTH_HEIGHT) h = MAX_WIDTH_HEIGHT;
 
@@ -103,16 +135,16 @@ unsigned char *createImage(double centerX, double centerY, double zoom, int maxI
 
     double xs[MAX_WIDTH_HEIGHT], ys[MAX_WIDTH_HEIGHT];
     for (int px=0; px<w; px++) {
-        xs[px] = (px - w/2)/zoom + centerX;
+        xs[px] = (px - w/2)/state.zoom + state.centerX;
     }
     for (int py=0; py<h; py++) {
-        ys[py] = (py - h/2)/zoom + centerY;
+        ys[py] = (py - h/2)/state.zoom + state.centerY;
     }
 
     for (int px=0; px<w; px++) {
         for (int py=0; py<h; py++) {
             r = g = b = 0;
-            int iterations = iterationsToEscape(xs[px], ys[py], maxIterations);
+            int iterations = iterationsToEscape(xs[px], ys[py], state.maxIterations);
             if (iterations != -1) {
                 int h = HUE_PER_ITERATION * iterations;
                 r = hue2rgb(h + 120);
@@ -131,39 +163,15 @@ unsigned char *createImage(double centerX, double centerY, double zoom, int maxI
 ////////////////////////////////////////////////////////////////////////////////
 
 
-
-class State {
-    public:
-        double centerX;
-        double centerY;
-        double zoom;
-        int iterations;
-        int w;
-        int h;
-        State() {
-            centerX = -1.186340599860225;
-            centerY = -0.303652988644423;
-            zoom = 400;
-            iterations = 100;
-            w = 700;
-            h = 700;
-        }
-        void left()     { centerX -= 100.0 / zoom; }
-        void down()     { centerY += 100.0 / zoom; }
-        void right()    { centerX += 100.0 / zoom; }
-        void up()       { centerY -= 100.0 / zoom; }
-        void zoomBy(double r)       { zoom *= r; }
-        void addIterations(int i)   { iterations += i; }
-};
-
 State state;
 
 const bool DRAW_ON_KEY = true;
 
-
 void draw(void) {
-    unsigned char *img = createImage(state.centerX, state.centerY, state.zoom, state.iterations, state.w, state.h);
+    // state.output();
+    unsigned char *img = createImage(state);
     writeImage(img, state.w, state.h);
+
 }
 
 void processChar(int ch) {
