@@ -9,10 +9,34 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <curses.h>
+
+////////////////////////////////////////////////////////////////////////////////
+
+bool curses_started = false;
+
+void endCurses() {
+    if (curses_started && !isendwin()) endwin();
+}
+
+void startCurses() {
+    if (curses_started) {
+        refresh();
+    } else {
+        initscr();
+        // cbreak();
+        // noecho();
+        intrflush(stdscr, false);
+        keypad(stdscr, true);
+        atexit(endCurses);
+        curses_started = true;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 const int MAX_WIDTH_HEIGHT = 2000;
 const int HUE_PER_ITERATION = 2;
-
 
 int iterationsToEscape(double x, double y, int maxIterations) {
     double tempa;
@@ -104,51 +128,52 @@ unsigned char *createImage(double centerX, double centerY, double zoom, int maxI
     return img;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 
-int main(void) {
-    double centerX = -1.186340599860225;
-    double centerY = -0.303652988644423;
-    double zoom = 40000;
-    int iterations = 300;
-    int w = 700;
-    int h = 700;
+double centerX = -1.186340599860225;
+double centerY = -0.303652988644423;
+double zoom = 400;
+int iterations = 100;
+int w = 700;
+int h = 700;
+
+const bool DRAW_ON_KEY = true;
+
+void draw(void) {
     unsigned char *img = createImage(centerX, centerY, zoom, iterations, w, h);
     writeImage(img, w, h);
 }
 
-/////////////////////////////////////////////////////////////////////////////
+void processChar(int ch) {
+    if (ch == 101) {} //e
+    else if (ch == 97)  centerX -= 100.0 / zoom; //a
+    else if (ch == 100) centerX += 100.0 / zoom; //d
+    else if (ch == 115) centerY += 100.0 / zoom; //s
+    else if (ch == 119) centerY -= 100.0 / zoom; //w
+    else if (ch == 114) zoom *= 2; //r
+    else if (ch == 102) zoom /= 2; //f
+    else if (ch == 116) iterations += 10; //t
+    else if (ch == 103) iterations -= 10; //g
+    // else printf("%i,", ch);
+}
 
-// int mainDEP(void) {
+int main() {
+    draw();
+    int ch = 0;
+    startCurses();
+    timeout(25);
+    while (ch != 111) { //o
+        ch = getchar();
+        if (ch != ERR && ch != -1) {
+           processChar(ch);
+           if (DRAW_ON_KEY || ch == 101) draw(); //e
+        }
+    }
+    endCurses();
+}
 
-//     printf("\n\n\n\n\n\n\n\n\tthis is a program of the mandelbrot group\n");
-//     // printf("\t   a=left,d=right\n\t   w=up,s=down\n");
-//     // printf("\t   z=zoonin,x=zoomout\n\t   r=+accuracy,e=-accuracy\n");
-//     // printf("\t   o=from the start\n\t   Space=Redraw\n\n\t   q-quit\n");
 
-//     // while (c!='q') {
-//     //         if (c==32) {
-//     //             draw(480,80);
-//     //         } else {
-//     //             switch (c) {
-//     //                 case 'a': x=x-range/5; break;
-//     //                 case 'd': x=x+range/5; break;
-//     //                 case 'w': y=y-range/5; break;
-//     //                 case 's': y=y+range/5; break;
-//     //                 case 'z': intrange++;  break;
-//     //                 case 'x': if (intrange>=1) intrange--;  break;
-//     //                 case 'r': run++;       break;
-//     //                 case 'e': run--;       break;
-//     //                 case 't': lsz=lsz+10;  break;
-//     //                 case 'g': lsz=lsz-10;  break;
-//     //                 case 'b': lsz=120;     break;
-//     //                 case 'v': lsz=480;     break;
-//     //                 case 'c': for(i=0;i<640;i++) for(j=0;j<480;putpixel(i,j,0),j++); break;
-//     //                 case 'f': printf("\t   x=%lf  y=%lf\n",x,y); printf("\t   range=2^%d run=2^%d\n",2-intrange,run); break;
-//     //                 case 'o': lsz=120;run=8;x=0;y=0;intrange=1;
-//     //             }
-//     //             draw(lsz,80);
-//     //         }
-//     //         c=getch();
-//     // }
-// }
+
+
+
 
