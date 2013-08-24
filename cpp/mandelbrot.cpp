@@ -90,7 +90,7 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
             r = g = b = 0;
             int iterations = iterationsToEscape(xs[px], ys[py], maxIterations);
             if (iterations != -1) {
-                int h = 360.0 * iterations/maxIterations;
+                int h = 2 * iterations;
                 r = hue2rgb(h + 120);
                 g = hue2rgb(h);
                 b = hue2rgb(h + 240);
