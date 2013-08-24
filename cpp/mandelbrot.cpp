@@ -11,7 +11,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int maxSize = 2000;
+const int MAX_WIDTH_HEIGHT = 2000;
+const int HUE_PER_ITERATION = 2;
 
 
 int iterationsToEscape(double x, double y, int maxIterations) {
@@ -69,15 +70,15 @@ void writeImage(unsigned char *img, int w, int h) {
 }
 
 int createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h) {
-    if (w > maxSize) w = maxSize;
-    if (h > maxSize) h = maxSize;
+    if (w > MAX_WIDTH_HEIGHT) w = MAX_WIDTH_HEIGHT;
+    if (h > MAX_WIDTH_HEIGHT) h = MAX_WIDTH_HEIGHT;
 
     unsigned char r, g, b;
     unsigned char *img = NULL;
     if (img) free(img);
     img = (unsigned char *)malloc(3*w*h);
 
-    double xs[maxSize], ys[maxSize];
+    double xs[MAX_WIDTH_HEIGHT], ys[MAX_WIDTH_HEIGHT];
     for (int px=0; px<w; px++) {
         xs[px] = (px - w/2)/zoom + centerX;
     }
@@ -90,7 +91,7 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
             r = g = b = 0;
             int iterations = iterationsToEscape(xs[px], ys[py], maxIterations);
             if (iterations != -1) {
-                int h = 2 * iterations;
+                int h = HUE_PER_ITERATION * iterations;
                 r = hue2rgb(h + 120);
                 g = hue2rgb(h);
                 b = hue2rgb(h + 240);
