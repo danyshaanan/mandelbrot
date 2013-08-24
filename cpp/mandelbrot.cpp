@@ -6,7 +6,7 @@
  * File location:   https://github.com/danyshaanan/mandelbrot/blob/master/cpp/mandelbrot.cpp
  *
  * Created somewhen between 1999 and 2002
- * Rewriten August 2013
+ * Rewritten August 2013
  *
  */
 
