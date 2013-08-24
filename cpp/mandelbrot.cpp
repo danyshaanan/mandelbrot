@@ -69,7 +69,7 @@ void writeImage(unsigned char *img, int w, int h) {
     fclose(f);
 }
 
-int createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h) {
+unsigned char *createImage(double centerX, double centerY, double zoom, int maxIterations, int w, int h) {
     if (w > MAX_WIDTH_HEIGHT) w = MAX_WIDTH_HEIGHT;
     if (h > MAX_WIDTH_HEIGHT) h = MAX_WIDTH_HEIGHT;
 
@@ -102,7 +102,7 @@ int createImage(double centerX, double centerY, double zoom, int maxIterations, 
             img[loc+0] = (unsigned char)(b);
         }
     }
-    writeImage(img, w, h);
+    return img;
 }
 
 
@@ -111,7 +111,10 @@ int main(void) {
     double centerY = -0.303652988644423;
     double zoom = 40000;
     int iterations = 300;
-    createImage(centerX, centerY, zoom, iterations, 700, 700);
+    int w = 700;
+    int h = 700;
+    unsigned char *img = createImage(centerX, centerY, zoom, iterations, w, h);
+    writeImage(img, w, h);
 }
 
 /////////////////////////////////////////////////////////////////////////////
