@@ -38,10 +38,18 @@ class State {
             w = 700;
             h = 700;
         }
-        void moveY(int change)      { centerY += change / zoom; }
-        void moveX(int change)      { centerX += change / zoom; }
-        void zoomBy(double r)       { zoom *= r; }
-        void addIterations(int i)   { maxIterations += i; }
+        void moveY(int change) {
+            centerY += change / zoom;
+        }
+        void moveX(int change) {
+            centerX += change / zoom;
+        }
+        void zoomBy(double r) {
+            zoom *= r;
+        }
+        void addIterations(int i) {
+            maxIterations += i;
+        }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
