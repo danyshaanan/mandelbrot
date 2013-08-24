@@ -130,30 +130,52 @@ unsigned char *createImage(double centerX, double centerY, double zoom, int maxI
 
 ////////////////////////////////////////////////////////////////////////////////
 
-double centerX = -1.186340599860225;
-double centerY = -0.303652988644423;
-double zoom = 400;
-int iterations = 100;
-int w = 700;
-int h = 700;
+
+
+class State {
+    public:
+        double centerX;
+        double centerY;
+        double zoom;
+        int iterations;
+        int w;
+        int h;
+        State() {
+            centerX = -1.186340599860225;
+            centerY = -0.303652988644423;
+            zoom = 400;
+            iterations = 100;
+            w = 700;
+            h = 700;
+        }
+        void left()     { centerX -= 100.0 / zoom; }
+        void down()     { centerY += 100.0 / zoom; }
+        void right()    { centerX += 100.0 / zoom; }
+        void up()       { centerY -= 100.0 / zoom; }
+        void zoomBy(double r)       { zoom *= r; }
+        void addIterations(int i)   { iterations += i; }
+};
+
+State state;
 
 const bool DRAW_ON_KEY = true;
 
+
 void draw(void) {
-    unsigned char *img = createImage(centerX, centerY, zoom, iterations, w, h);
-    writeImage(img, w, h);
+    unsigned char *img = createImage(state.centerX, state.centerY, state.zoom, state.iterations, state.w, state.h);
+    writeImage(img, state.w, state.h);
 }
 
 void processChar(int ch) {
     if (ch == 101) {} //e
-    else if (ch == 97)  centerX -= 100.0 / zoom; //a
-    else if (ch == 100) centerX += 100.0 / zoom; //d
-    else if (ch == 115) centerY += 100.0 / zoom; //s
-    else if (ch == 119) centerY -= 100.0 / zoom; //w
-    else if (ch == 114) zoom *= 2; //r
-    else if (ch == 102) zoom /= 2; //f
-    else if (ch == 116) iterations += 10; //t
-    else if (ch == 103) iterations -= 10; //g
+    else if (ch == 97)  state.left(); //a
+    else if (ch == 100) state.right(); //d
+    else if (ch == 115) state.down(); //s
+    else if (ch == 119) state.up(); //w
+    else if (ch == 114) state.zoomBy(2); //r
+    else if (ch == 102) state.zoomBy(0.5); //f
+    else if (ch == 116) state.addIterations(10); //t
+    else if (ch == 103) state.addIterations(-10); //g
     // else printf("%i,", ch);
 }
 
