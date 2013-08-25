@@ -13,11 +13,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <curses.h>
+#include <math.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
 const int MAX_WIDTH_HEIGHT = 2000;
-const int HUE_PER_ITERATION = 3;
+const int HUE_PER_ITERATION = 5;
 const bool DRAW_ON_KEY = true;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +55,7 @@ class State {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int iterationsToEscape(double x, double y, int maxIterations) {
+float iterationsToEscape(double x, double y, int maxIterations) {
     double tempa;
     double a = 0;
     double b = 0;
@@ -62,15 +63,18 @@ int iterationsToEscape(double x, double y, int maxIterations) {
         tempa = a*a - b*b + x;
         b = 2*a*b + y;
         a = tempa;
-        if (a*a+b*b > 4) {
-            return i;
+        if (a*a+b*b > 64) {
+            // return i; // discrete
+            return i - log(sqrt(a*a+b*b))/log(8); //continuous
         }
     }
     return -1;
 }
 
-int hue2rgb(int t){
-    t = t%360;
+int hue2rgb(float t){
+    while (t>360) {
+        t -= 360;
+    }
     if (t < 60) return 255.*t/60.;
     if (t < 180) return 255;
     if (t < 240) return 255. * (4. - t/60.);
@@ -131,9 +135,9 @@ unsigned char *createImage(State state) {
     for (int px=0; px<w; px++) {
         for (int py=0; py<h; py++) {
             r = g = b = 0;
-            int iterations = iterationsToEscape(xs[px], ys[py], state.maxIterations);
+            float iterations = iterationsToEscape(xs[px], ys[py], state.maxIterations);
             if (iterations != -1) {
-                int h = HUE_PER_ITERATION * iterations;
+                float h = HUE_PER_ITERATION * iterations;
                 r = hue2rgb(h + 120);
                 g = hue2rgb(h);
                 b = hue2rgb(h + 240);
