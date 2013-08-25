@@ -1,1 +1,0 @@
-gcc mandelbrot.cpp -o mandelbrot -lcurses && time ./mandelbrot && convert temp.bmp temp.png
