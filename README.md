@@ -27,9 +27,16 @@ is an npmjs package for viewing and moving in the Mandelbrot set in a terminal, 
 
 ![The Mandelbrot set in nodejs](other/cli-mandelbrot.png?raw=true)
 
+#### Spreadsheet (or Excel)
+Not a real language, but still noteworthy.
+
+[This Google spreadsheet](https://docs.google.com/spreadsheet/ccc?key=0AoH_g__QQs5ldHE1R0I0TmE3Zmw1c1hmczFlVWt5MWc)
+generates the Mandelbrot set out of five formulae - two to define the real and imaginary values of the area,
+two to define the real and imaginary parts of the iteration, and one to define the escaping condition.
+Those formulae can be found in the five cells marked with borders. All other cells are stretched from them.
+
 ##### Also have, should add:
 
 * web-js
 * flash :|
-* excel(!)
 * ?
