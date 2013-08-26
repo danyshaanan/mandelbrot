@@ -3,7 +3,7 @@
 import math, PIL.Image
 
 w, h = 640, 640
-x, y = -0.7, 0
+x, y = 0, 0
 zoom = 200
 radius        = 2**3
 maxIterations = 41
@@ -17,7 +17,7 @@ pixel = image.load()
 for (a,real) in areal:
   for (b,imag) in bimag:
     z = real + imag*1j
-    cz = z
+    cz = (0.328 + 0.7j)#/2 + z/2 #uncomment for half julia half mandelbrot
     i = 0
     while i<maxIterations and abs(z)<radius:
       z = z*z + cz
@@ -26,5 +26,5 @@ for (a,real) in areal:
       pixel[a,b] = 128+128*math.sin(i - math.log(abs(z),radius))
 
 # image.show()
-image.save("mandelbrot.png")
+image.save("julia.png")
 
