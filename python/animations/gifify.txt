@@ -1,4 +1,0 @@
-
-convert -delay 2 -loop 0 output/zoomIn_*.png output/zoomIn.gif
-convert -delay 2 -loop 0 output/mandelbrot_to_julia_c_*.png output/mandelbrot_to_julia_c.gif
-convert -delay 2 -loop 0 output/mandelbrot_to_julia_bw_*.png output/mandelbrot_to_julia_bw.gif

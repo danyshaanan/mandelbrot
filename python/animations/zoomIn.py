@@ -38,7 +38,9 @@ for f in rng:
         z = z*z + cz
         i += 1
       if i<maxIterations:
-        pixel[a,b] = 128+128*math.sin(i - math.log(abs(z),radius) - f/10.)
+        v = i - math.log(abs(z),radius) - f/10.
+        if v > -math.pi/2.:
+          pixel[a,b] = 128+128*math.sin(v)
 
   # image.show()
   filename = "output/zoomIn_" + str(1000000 + f) + ".png"

@@ -1,0 +1,10 @@
+
+
+# create giff:
+convert -delay 2 -loop 0 output/zoomIn_*.png output/zoomIn.gif
+convert -delay 2 -loop 0 output/mandelbrot_to_julia_c_*.png output/mandelbrot_to_julia_c.gif
+convert -delay 2 -loop 0 output/mandelbrot_to_julia_bw_*.png output/mandelbrot_to_julia_bw.gif
+
+# create video:
+rename 's/zoomIn_10000//g' *png
+ffmpeg -r 15 -b 3600 -i %02d.png test3600.mp4
