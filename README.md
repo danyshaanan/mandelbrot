@@ -21,6 +21,11 @@ is an npmjs package for viewing and moving in the Mandelbrot set in a terminal, 
 
 ![The Mandelbrot set in nodejs](other/cli-mandelbrot.png?raw=true)
 
+#### javascript canvas
+Javascript HTML version using the browser canvas object.
+
+![The Mandelbrot set in javascript canvas](js-canvas/screen-shot.png?raw=true)
+
 #### python
 Continuous, Require PIL:
 
