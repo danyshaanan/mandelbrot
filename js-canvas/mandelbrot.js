@@ -3,11 +3,22 @@ var mandelbrot = (function(){
     var resolutionDevider = 1;
     var exportObj = {};
     var imageWidth, imageHeight, maxIteration, canvasContext, center, zoom;
-
-    var colors = [];
+    var colors = [], xPixelMap = [], yPixelMap = [];
+    var startTime;
 
     exportObj.draw = function(canvas, iteration, imageZoom, imageCenter){
+        updateFields(canvas, iteration, imageZoom, imageCenter);
+        generateColorsMap();
+        generatePixelMap();
+        for(var x = 0; x < imageWidth; x++){
+            for(var y = 0; y < imageHeight; y++){
+                var escapeTime = calculateEscapeTime(xPixelMap[x], yPixelMap[y]);   
+                drawPixel(x, y, colors[escapeTime]); 
+            }
+        }
+    }
 
+    function updateFields(canvas, iteration, imageZoom, imageCenter){
         maxIteration = iteration;
         imageWidth = canvas.width / resolutionDevider;
         imageHeight = canvas.height / resolutionDevider;
@@ -17,15 +28,16 @@ var mandelbrot = (function(){
             center = {'x': -0.75, 'y':0}; zoom = 1;    
         }     
         canvasContext = canvas.getContext("2d");
+    }
 
-        generateColorsMap();
-
+    function generatePixelMap(){
+        xPixelMap = []; yPixelMap = [];
         for(var x = 0; x < imageWidth; x++){
-            for(var y = 0; y < imageHeight; y++){
-                var escapeSpeed = mandelizeIt(x, y);   
-                drawPixel(x, y, colors[escapeSpeed]); 
-            }
-        }
+            xPixelMap[x] = scaleX(x);    
+        }   
+        for(var y = 0; y < imageHeight; y++){
+            yPixelMap[y] = scaleY(y); 
+        } 
     }
 
     function drawPixel(x,y,colorString){
@@ -33,17 +45,13 @@ var mandelbrot = (function(){
         canvasContext.fillRect(x*resolutionDevider, y*resolutionDevider, resolutionDevider, resolutionDevider);
     }
 
-    function mandelizeIt(imageX, imageY){
-        var x0 = scaleX(imageX);
-        var y0 = scaleY(imageY);
-        var x = y = 0;
-
+    function calculateEscapeTime(cx, cy){
+        var x = 0, y = 0;
         for(var i = 0; i < maxIteration && x*x + y*y < 4 ;i++){
-            _x = x*x - y*y + x0;
-            y = 2*x*y + y0
+            _x = x*x - y*y + cx;
+            y = 2*x*y + cy
             x = _x;
         }
-
         return i;
     }
 
@@ -53,7 +61,6 @@ var mandelbrot = (function(){
             hex ="0"
         }
         hex += int.toString(16);
-
         return hex;
     }
 
