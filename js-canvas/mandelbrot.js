@@ -7,6 +7,7 @@ var mandelbrot = (function(){
     var startTime;
 
     exportObj.draw = function(canvas, iteration, imageZoom, imageCenter){
+        startTime = new Date();
         updateFields(canvas, iteration, imageZoom, imageCenter);
         generateColorsMap();
         generatePixelMap();
@@ -16,6 +17,13 @@ var mandelbrot = (function(){
                 drawPixel(x, y, colors[escapeTime]); 
             }
         }
+        reportEndTime();
+    }
+
+    function reportEndTime(){
+        var now = new Date();
+        var time = (now.getTime() - startTime.getTime()) / 1000;
+        console.log("Rendering Time: " + time + " seconds");
     }
 
     function updateFields(canvas, iteration, imageZoom, imageCenter){
