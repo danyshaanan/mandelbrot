@@ -1,6 +1,5 @@
 var mandelbrot = (function(){
 
-    var resolutionDevider = 1;
     var exportObj = {};
     var imageWidth, imageHeight, maxIteration, canvasContext, center, zoom;
     var colors = [], xPixelMap = [], yPixelMap = [];
@@ -11,31 +10,53 @@ var mandelbrot = (function(){
         updateFields(canvas, iteration, imageZoom, imageCenter);
         generateColorsMap();
         generatePixelMap();
+        var pixelArray = [];
         for(var x = 0; x < imageWidth; x++){
+            pixelArray[x] = [];
             for(var y = 0; y < imageHeight; y++){
-                var escapeTime = calculateEscapeTime(xPixelMap[x], yPixelMap[y]);   
-                drawPixel(x, y, colors[escapeTime]); 
+                pixelArray[x][y] = colors[calculateEscapeTime(xPixelMap[x],yPixelMap[y])];
             }
         }
-        reportEndTime();
-    }
-
-    function reportEndTime(){
-        var now = new Date();
-        var time = (now.getTime() - startTime.getTime()) / 1000;
-        console.log("Rendering Time: " + time + " seconds");
+        reportTimeInterval('Calculation time');
+        renderImage(pixelArray);
+        reportTimeInterval('Render time');
     }
 
     function updateFields(canvas, iteration, imageZoom, imageCenter){
         maxIteration = iteration;
-        imageWidth = canvas.width / resolutionDevider;
-        imageHeight = canvas.height / resolutionDevider;
+        imageWidth = canvas.width;
+        imageHeight = canvas.height;
         if(imageCenter){
             center = imageCenter; zoom = imageZoom;   
         }else{
             center = {'x': -0.75, 'y':0}; zoom = 1;    
         }     
         canvasContext = canvas.getContext("2d");
+    }
+
+    function renderImage(imagePixelArray){
+        var imageData = canvasContext.getImageData(0, 0, imageWidth, imageHeight);
+        var data = imageData.data;
+
+        for(var x = 0; x < imageWidth; x++){
+            for(var y = 0; y < imageHeight; y++){
+                var rgb = imagePixelArray[x][y];
+                var index = (y * imageWidth + x) * 4;
+                data[index] = rgb[0];
+                data[++index] = rgb[1];
+                data[++index] = rgb[2];
+                data[++index] = 255;
+            }
+        } 
+
+        canvasContext.putImageData(imageData, 0, 0);
+    }
+
+    function reportTimeInterval(label){
+        var now = new Date();
+        var time = (now.getTime() - startTime.getTime()) / 1000;
+        console.log(label + ": " + time + " seconds");
+        startTime = new Date();
     }
 
     function generatePixelMap(){
@@ -48,11 +69,6 @@ var mandelbrot = (function(){
         } 
     }
 
-    function drawPixel(x,y,colorString){
-        canvasContext.fillStyle = colorString;
-        canvasContext.fillRect(x*resolutionDevider, y*resolutionDevider, resolutionDevider, resolutionDevider);
-    }
-
     function calculateEscapeTime(cx, cy){
         var x = 0, y = 0;
         for(var i = 0; i < maxIteration && x*x + y*y < 4 ;i++){
@@ -61,19 +77,6 @@ var mandelbrot = (function(){
             x = _x;
         }
         return i;
-    }
-
-    function zeroPaddedHex(int){
-        var hex = "";
-        if(int < 16){
-            hex ="0"
-        }
-        hex += int.toString(16);
-        return hex;
-    }
-
-    function rgbToColorString(r, g, b){
-        return "#"+zeroPaddedHex(r)+zeroPaddedHex(g)+zeroPaddedHex(b);
     }
 
     function generateColorsMap(){
@@ -94,7 +97,7 @@ var mandelbrot = (function(){
                 r = g = b = 0;
             }
 
-            colors.push(rgbToColorString(r,g,b));   
+            colors.push([r,g,b]);   
         } 
     }
 
