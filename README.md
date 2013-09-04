@@ -23,7 +23,7 @@ is an npmjs package for viewing and moving in the Mandelbrot set in a terminal, 
 
 #### javascript + canvas
 Continuous, interactive, using HTML5's canvas object.
-[\[live demo\](http://leerons.github.io/mandelbrot.html)
+[&#91;live demo&#93;](http://leerons.github.io/mandelbrot.html)
 
 ![The Mandelbrot set in javascript + canvas](js-canvas/mandelbrot.png?raw=true)
 
