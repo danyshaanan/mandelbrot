@@ -45,7 +45,8 @@ var keyHandler = (function(){
                 case 39: // Right Arrow
                     pressedKeys.right = true;
                     break;
-            }          
+            }        
+            e.preventDefault();  
         }
 
         document.onkeyup = function(e){
@@ -69,11 +70,13 @@ var keyHandler = (function(){
                     pressedKeys.right = false;
                     break;
             }          
+            e.preventDefault();
         }
     }
 
     function stopListeningToKeyEvent(){
         document.onkeydown = null;    
+        document.onkeyup = null; 
     }
 
     function updateLoop(){
