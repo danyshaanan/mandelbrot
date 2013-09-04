@@ -1,6 +1,7 @@
 <html>
 <head>
     <script type="text/javascript" src="mandelbrot.js" ></script>
+    <script type="text/javascript" src="keyhandler.js" ></script>
 </head>
 <body>
     <div>
@@ -14,15 +15,13 @@
         canvas.style.position = "absolute";
         canvas.style.top   = "50 px";
         canvas.style.left   = "50 px";
+        document.getElementsByTagName('body')[0].appendChild(canvas);
         
         // The whole set
         mandelbrot.draw(canvas, 100);
-        
-        // Using zoom and center point
-//      mandelbrot.draw(canvas, 100, 30,  {'x':0, 'y': -0.8});
-//      mandelbrot.draw(canvas, 100, 100, {'x':-0.3, 'y': -0.65});
 
-        document.getElementsByTagName('body')[0].appendChild(canvas);
+        //  Keyboard Events
+        keyHandler.listen(100);
     </script>
 </body>
 </html>

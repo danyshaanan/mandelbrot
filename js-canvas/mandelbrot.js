@@ -1,7 +1,7 @@
 var mandelbrot = (function(){
 
     var exportObj = {};
-    var imageWidth, imageHeight, maxIteration, canvasContext, center, zoom;
+    var imageWidth, imageHeight, maxIteration, canvasContext, center, zoom, step;
     var colors = [], xPixelMap = [], yPixelMap = [];
     var startTime;
 
@@ -10,6 +10,49 @@ var mandelbrot = (function(){
         updateFields(canvas, iteration, imageZoom, imageCenter);
         generateColorsMap();
         generatePixelMap();
+        updateStepSize();
+        render(true);
+    }
+
+    exportObj.zoomIn = function(andRender){
+       zoom *= 2;
+       generatePixelMap();
+       updateStepSize();
+       if(andRender) render(); 
+    }
+
+    exportObj.zoomOut = function(andRender){
+        zoom /= 2;
+        generatePixelMap();
+        updateStepSize();
+        if(andRender) render();
+    }
+
+    exportObj.moveRight = function(andRender){
+       center.x += step.x;
+       generatePixelMap();
+       if(andRender) render(); 
+    }
+
+    exportObj.moveLeft = function(andRender){
+       center.x -= step.x;
+       generatePixelMap();
+       if(andRender) render();
+    }
+
+    exportObj.moveUp = function(andRender){
+       center.y -= step.y;
+       generatePixelMap();
+       if(andRender) render(); 
+    }
+
+    exportObj.moveDown = function(andRender){
+       center.y += step.y;
+       generatePixelMap();
+       if(andRender) render(); 
+    }
+    
+    function render(logTimes){
         var pixelArray = [];
         for(var x = 0; x < imageWidth; x++){
             pixelArray[x] = [];
@@ -17,9 +60,16 @@ var mandelbrot = (function(){
                 pixelArray[x][y] = colors[calculateEscapeTime(xPixelMap[x],yPixelMap[y])];
             }
         }
-        reportTimeInterval('Calculation time');
+        if(logTimes) reportTimeInterval('Calculation time');
         renderImage(pixelArray);
-        reportTimeInterval('Render time');
+        if(logTimes) reportTimeInterval('Render time');
+    }
+
+    exportObj.render = render;
+
+    function updateStepSize(){
+        step.x = 3.5 / (zoom * 50);
+        step.y = 2   / (zoom * 30);
     }
 
     function updateFields(canvas, iteration, imageZoom, imageCenter){
@@ -32,6 +82,7 @@ var mandelbrot = (function(){
             center = {'x': -0.75, 'y':0}; zoom = 1;    
         }     
         canvasContext = canvas.getContext("2d");
+        step = {};
     }
 
     function renderImage(imagePixelArray){
