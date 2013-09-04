@@ -22,7 +22,8 @@ is an npmjs package for viewing and moving in the Mandelbrot set in a terminal, 
 ![The Mandelbrot set in nodejs](other/cli-mandelbrot.png?raw=true)
 
 #### javascript + canvas
-JavaScript, using HTML5's canvas object.
+Continuous, interactive, using HTML5's canvas object.
+[\[live demo\](http://leerons.github.io/mandelbrot.html)
 
 ![The Mandelbrot set in javascript + canvas](js-canvas/mandelbrot.png?raw=true)
 
