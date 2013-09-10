@@ -34,6 +34,13 @@ Continuous, Require PIL:
 
 ![The Mandelbrot set in Python](python/mandelbrot.png?raw=true)
 
+#### postscript
+Will get your printer huffing and puffing
+
+![The Mandelbrot set in postscript - minimal version](postscript/preview.minimal.png?raw=true)
+
+![The Mandelbrot set in postscript](postscript/preview.detail.png?raw=true)
+
 #### ruby
 ![The Mandelbrot set in Ruby](ruby/mandelbrot_ascii.png?raw=true)
 
@@ -41,13 +48,6 @@ Continuous, Require PIL:
 Simple ascii version:
 
 ![The Mandelbrot set in php](php/mandelbrot_ascii.png?raw=true)
-
-#### postscript
-Will get your printer huffing and puffing
-
-![The Mandelbrot set in postscript - minimal version](postscript/preview.minimal.png?raw=true)
-
-![The Mandelbrot set in postscript](postscript/preview.detail.png?raw=true)
 
 #### Spreadsheet (or Excel)
 Not a real language, but still noteworthy.
