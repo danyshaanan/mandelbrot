@@ -1,0 +1,25 @@
+<< /PageSize [842 595] /Orientation 0 >> setpagedevice 2 setlinewidth
+
+0 1 595 1 sub{
+    /j exch def
+    0 1 842 1 sub {
+        /i exch def
+        /cx i 842 div 3.5 mul 2.5 sub def
+        /cy j 57 sub 595 div 2.474 mul 1 sub def
+        /x 0 def /y 0 def
+        0 1 100{      
+            /time exch def
+            x x mul y y mul add 4 lt  
+            {
+                /temp_x x x mul y y mul sub cx add def  
+                /y 2 x mul y mul cy add def
+                /x temp_x def
+            }        
+            {exit} ifelse
+        }for
+        i j moveto 1 0 rlineto
+        1 time 100 div sub setgray stroke 
+    } for
+} for
+
+showpage

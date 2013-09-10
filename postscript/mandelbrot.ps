@@ -1,0 +1,133 @@
+<< /PageSize [842 595] /Orientation 0 >> setpagedevice
+% A4 = 595 x 842 points @ 72 dpi
+/width 842 def
+/height 481 def
+
+0 57 translate
+
+/max_iteration 100 def
+%/zoom 1 def
+%/center_x -0.75 def
+%/center_y 0 def
+
+/zoom 64 def
+/center_x -1.18 def
+/center_y -0.25 def
+
+/time_to_rgb {
+    /i exch max_iteration div 1024 mul def
+
+    i 256 lt {
+        /r 1 def
+        /g i 255 div def
+        /b 0 def
+        /c 0 def
+    }{ 
+    i 512 lt {
+        /r 512 i sub 255 div def
+        /g 1 def
+        /b 0 def
+        /c 1 def
+    }{
+    i 768 lt {
+        /r 0 def
+        /g 768 i sub 255 div def
+        /b i 512 sub 255 div def
+        /c 2 def
+    }{
+        i 1024 lt {
+        /r i 768 sub 255 div def
+        /g 0 def
+        /b 1 def
+        /c 3 def
+    }{
+        /r 0 def
+        /g 0 def
+        /b 0 def
+        /c 4 def
+    }ifelse
+    }ifelse           
+    }ifelse
+    }ifelse
+
+    r g b
+}def
+
+/calc_escape_time {    % stack = cx cy
+    6 dict begin
+    % variables
+    /cy exch def
+    /cx exch def
+    /x 0 def 
+    /y 0 def
+
+    0 1 max_iteration{      
+        /time exch def
+        x x mul y y mul add 4 lt  
+        {
+            /temp_x x x mul y y mul sub cx add def  
+            /y 2 x mul y mul cy add def
+            /x temp_x def
+        }        
+        {exit} ifelse
+    }for
+    time
+    end
+} def
+
+
+% create scaled x and y arrays
+
+/scale_x {
+    2 dict begin
+    /x exch def
+    /delta 3.5 zoom div def
+    x width div delta mul center_x delta 2 div sub add
+    end
+} def
+
+/scale_y {
+    2 dict begin
+    /y exch def
+    /delta 2 zoom div def
+    y height div delta mul center_y delta 2 div sub add
+    end
+} def
+
+/scaled_x width array def
+0 1 scaled_x length 1 sub
+{
+    1 dict begin
+    /x exch def
+    scaled_x x x scale_x put  
+    end  
+} for
+
+/scaled_y height array def
+0 1 scaled_y length 1 sub
+{
+    1 dict begin
+    /y exch def 
+    scaled_y y y scale_y put  
+    end  
+} for
+
+% Render
+
+2 setlinewidth
+% loop all page point and calculate escape time for each one
+0 1 height 1 sub{
+    2 dict begin
+    /y exch def
+    0 1 width 1 sub {
+        /x exch def
+        x y moveto
+        1 0 rlineto
+        scaled_x x get scaled_y y get calc_escape_time time_to_rgb setrgbcolor
+        %scaled_x x get scaled_y y get calc_escape_time max_iteration div setgray
+        stroke 
+    } for
+    end
+} for
+
+showpage
