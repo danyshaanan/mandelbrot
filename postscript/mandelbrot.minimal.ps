@@ -1,5 +1,21 @@
-<< /PageSize [842 595] /Orientation 0 >> setpagedevice 2 setlinewidth
+%!PS-Adobe-3.0
+%%Creator: Leeron Shalev
+%%Orientation: Landscape
+%%DocumentMedia: a4 595 842 80 () ()
+%%Pages: 1
+%%EndComments
+%%EndProlog
+%%BeginSetup
+  % A4, rotated 90 degrees ACW
+  << /PageSize [595 842] /Orientation 3 >> setpagedevice
+%%EndSetup
+%%Page: 1 1
+%%BeginPageSetup
+  90 rotate 0 -595 translate
+%%EndPageSetup
 
+
+2 setlinewidth
 0 1 595 1 sub{
     /j exch def
     0 1 842 1 sub {
@@ -21,5 +37,8 @@
         1 time 100 div sub setgray stroke 
     } for
 } for
-
 showpage
+
+
+%%Trailer
+%%EOF
