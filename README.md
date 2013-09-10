@@ -45,9 +45,9 @@ Simple ascii version:
 #### postscript
 Will get your printer huffing and puffing
 
-![The Mandelbrot set in postscript](postscript/preview.detail.png?raw=true)
-
 ![The Mandelbrot set in postscript - minimal version](postscript/preview.minimal.png?raw=true)
+
+![The Mandelbrot set in postscript](postscript/preview.detail.png?raw=true)
 
 #### Spreadsheet (or Excel)
 Not a real language, but still noteworthy.
