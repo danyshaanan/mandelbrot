@@ -23,18 +23,18 @@
 (define (color-pixel z iter)
 	(+ 128 (* 128 (sin (- iter (/ (log (magnitude z)) (log radius))))))) 
 
-(define (mandlebrot-iteration z)
-		(define (mandle-step z cz cntr)
+(define (mandelbrot-iteration z)
+		(define (mandel-step z cz cntr)
 			(if (and (< cntr maxIterations) (< (magnitude z) radius))
-				(mandle-step (+ (* z z) cz) cz (+ 1 cntr))
+				(mandel-step (+ (* z z) cz) cz (+ 1 cntr))
 				(if (< cntr maxIterations)
 					(list z (color-pixel z cntr))
 					(list z 0))))
-		(mandle-step z z 0))
+		(mandel-step z z 0))
 
-(define (mandlebrot-row row)
-	(map (lambda (item) (list (car item) (cadr item) (mandlebrot-iteration (caddr item)))) row))
+(define (mandelbrot-row row)
+	(map (lambda (item) (list (car item) (cadr item) (mandelbrot-iteration (caddr item)))) row))
 
-(define (mandlebrot-matrix matrix) (map mandlebrot-row matrix))
+(define (mandelbrot-matrix matrix) (map mandelbrot-row matrix))
 
-(define mandlebrot-set (mandlebrot-matrix mat))
+(define mandelbrot-set (mandelbrot-matrix mat))
