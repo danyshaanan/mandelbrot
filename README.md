@@ -41,6 +41,9 @@ Will get your printer huffing and puffing
 
 ![The Mandelbrot set in postscript](postscript/preview.detail.png?raw=true)
 
+#### awk
+![The Mandelbrot set in awk](awk/mandelbrot_ascii.png?raw=true)
+
 #### ruby
 ![The Mandelbrot set in Ruby](ruby/mandelbrot_ascii.png?raw=true)
 
