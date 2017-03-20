@@ -22,6 +22,8 @@ is an npmjs package for viewing and moving in the Mandelbrot set in a terminal, 
 ![The Mandelbrot set in nodejs](other/cli-mandelbrot.png?raw=true)
 
 #### javascript + canvas
+By [Leerons]
+
 Continuous, interactive, using HTML5's canvas object.
 [&#91;live demo&#93;](http://leerons.github.io/mandelbrot.html)
 
@@ -35,6 +37,8 @@ Continuous, Require PIL:
 ![The Mandelbrot set in Python](python/mandelbrot.png?raw=true)
 
 #### postscript
+By [Leerons]
+
 Will get your printer huffing and puffing
 
 ![The Mandelbrot set in postscript - minimal version](postscript/preview.minimal.png?raw=true)
@@ -62,3 +66,6 @@ Not a real language, but still noteworthy.
 generates the Mandelbrot set out of five formulae - two to define the real and imaginary values of the area,
 two to define the real and imaginary parts of the iteration, and one to define the escaping condition.
 Those formulae can be found in the five cells marked with borders. All other cells are stretched from them.
+
+
+[Leerons]: https://github.com/leerons
