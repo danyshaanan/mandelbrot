@@ -9,14 +9,12 @@ val size = 600
 def grey(v: Int) = v << 16 | v << 8 | v
 def color(i: Int) = grey(41 * i)
 def map(v: Double) = 4 * (v / size - 0.5)
-def mandelbrot(a0: Double, b0: Double): Int = mandelbrot(a0, b0, 0, 0, 0)
 
 @tailrec
-def mandelbrot(a0: Double, b0: Double, a: Double, b: Double, i: Int): Int = {
+def mandelbrot(a0: Double, b0: Double, a: Double = 0, b: Double = 0, i: Int = 0): Int =
   if (a * a + b * b > 4) i
   else if (i >= 100) 0
   else mandelbrot(a0, b0, a * a - b * b + a0, 2 * a * b + b0, i + 1)
-}
 
 val image = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB)
 
