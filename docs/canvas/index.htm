@@ -1,0 +1,44 @@
+<html lang=en>
+<head>
+<style>
+body { text-align: center; margin: 100px; font-family: monospace; font-size: 14px; }
+canvas { margin: 40px; border: 1px solid black; }
+</style>
+</head>
+<body>
+
+<script src='canvas.js'></script>
+<script src='color.js'></script>
+<script src='math.js'></script>
+
+<h4>
+Drag to move<br/>
+Right/left click to zoom<br/>
+Click, hold, and release the Mandelbrot (left) to set the C value in the rational map z => z<sup>2</sup> + C used by the Julia (right)<br/>
+<span></span><br/>
+</h4>
+<hr />
+<canvas id=mandl width=600 height=600></canvas>
+<canvas id=julia width=600 height=600></canvas>
+
+<script>
+////////////////////////////////////////////////////////////////////////////////
+'use strict'
+
+const parseComplex = z => `${z[0].toFixed(4)} ${z[1] < 0 ? '-' : '+'} ${Math.abs(z[1]).toFixed(4)}i`
+
+const mandl = Canvas('mandl', math.mandelbrot,  { a: -2.2, b: -1.5, zoom: 1/200, i: 99 })
+const julia = Canvas('julia', math.sampleJulia, { a: -1.9, b: -2.0, zoom: 1/160, i: 99 })
+
+mandl.onClick(e => {
+  const C = mandl.pixelLocation(e.offsetX, e.offsetY)
+  document.title = parseComplex(C)
+  julia.setGenerator(math.getJulia(C))
+})
+
+document.title = performance.now() | 0
+////////////////////////////////////////////////////////////////////////////////
+</script>
+
+</body>
+</html>

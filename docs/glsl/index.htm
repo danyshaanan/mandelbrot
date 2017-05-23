@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<style>
+body { text-align: center; margin: 100px; font-family: monospace; font-size: 14px; }
+canvas { margin: 40px; border: 1px solid black; }
+</style>
+</head>
+<body>
+
+<h4>
+Drag to move<br/>
+Right/left click to zoom<br/>
+Hover the Mandelbrot (left) to set the C value in the rational map z => z<sup>2</sup> + C used by the Julia (right)<br/>
+<br />
+Download: <a id=dl-mandl href=''>Mandelbrot</a> | <a id=dl-julia href=''>Julia</a>
+</h4>
+<hr />
+<canvas id=mandl width=600 height=600></canvas>
+<canvas id=julia width=600 height=600></canvas>
+
+<script id='FRAGMENT_SHADER' type='webgl'>
+precision highp float;
+
+uniform bool julia;
+uniform vec2 generator;
+uniform vec2 size;
+uniform vec2 origin;
+uniform float zoom;
+
+vec2 z;
+float len, v, r = pow(2.0, 3.0);
+
+vec2 transform(vec2 p) {
+  return zoom * (p - size / 2.0) + origin;
+}
+
+vec2 square(vec2 z) {
+  return vec2(pow(z.x, 2.0) - pow(z.y, 2.0), 2.0 * z.x * z.y);
+}
+
+float iterations(vec2 c) {
+  z = julia ? c : vec2(0, 0);
+  for (int i = 0; i < 400; i++) {
+    z = square(z) + (julia ? generator : c);
+    len = length(z);
+    if (len > r) return float(i) - log(len) / log(r);
+  }
+  return 0.0;
+}
+
+float hue2c(float p, float q, float t) {
+  t = mod(t, 6.0);
+  if (t < 1.0) return p + (q - p) * t;
+  if (t < 3.0) return q;
+  if (t < 4.0) return p + (q - p) * (4.0 - t);
+  return p;
+}
+
+vec4 hslToRgba(float h, float s, float l) {
+  if (s == 0.0) return vec4(l, l, l, 1.0);
+  float q = l < 0.5 ? l * (1.0 + s) : l + s - l * s;
+  float p = 2.0 * l - q;
+  h = h * 6.0;
+  return vec4(
+    hue2c(p, q, h + 2.0),
+    hue2c(p, q, h      ),
+    hue2c(p, q, h + 4.0),
+    1
+  );
+}
+
+vec4 color(float it) {
+  if (it == 0.0) return vec4(0, 0, 0, 1);
+  v = 0.5 + 0.5 * sin(it);
+  return hslToRgba(it / 240.0, 1.0, it < 300.0 ? 0.5 : 0.5 - (it - 300.0) / 100.0 * 0.5);
+}
+
+void main() {
+  gl_FragColor = color(iterations(transform(gl_FragCoord.xy)));
+}
+</script>
+
+<script id='VERTEX_SHADER' type='webgl'>
+attribute vec4 position;
+
+void main() {
+  gl_Position = position;
+}
+</script>
+
+<script>
+'use strict'
+
+function webglCanvas(id, shaders, def) {
+  const canvas = document.getElementById(id)
+  const half = { W: canvas.width / 2, H: canvas.height / 2 }
+
+  const gl = canvas.getContext('webgl')
+  const prog = gl.createProgram()
+
+  shaders.forEach(({id, text}) => {
+    const shader = gl.createShader(gl[id])
+    gl.shaderSource(shader, text)
+    gl.compileShader(shader)
+    gl.attachShader(prog, shader)
+  })
+
+  gl.linkProgram(prog)
+  gl.useProgram(prog)
+
+  const state = {}
+  ;['zoom', 'origin', 'size', 'julia', 'generator'].forEach(k => state[k] = gl.getUniformLocation(prog, k))
+
+  gl.uniform2f(state.size, canvas.width, canvas.height)
+  gl.uniform1f(state.i, def.i)
+  gl.uniform2f(state.origin, ...def.origin)
+  gl.uniform1f(state.julia, id === 'julia')
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
+  gl.bufferData(gl.ARRAY_BUFFER, Float32Array.of(1, 1, -1, 1, 1, -1, -1, -1), gl.STATIC_DRAW)
+  gl.enableVertexAttribArray(0)
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
+
+  const draw = _ => {
+    gl.uniform1f(state.zoom, def.zoom)
+    gl.uniform2f(state.origin, ...def.origin)
+    gl.uniform2f(state.generator, ...def.generator)
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+  }
+
+  const getDiff = (e1, e2) => {
+    const [x, y] = [e1.offsetX - e2.offsetX, e1.offsetY - e2.offsetY]
+    return { x, y, r: Math.hypot(x, y) }
+  }
+
+  const zoomAround = (zoom, ev) => {
+    def.origin[0] += (ev.offsetX - half.W) * def.zoom
+    def.origin[1] -= (ev.offsetY - half.H) * def.zoom
+    def.zoom *= zoom
+    def.origin[0] -= (ev.offsetX - half.W) * def.zoom
+    def.origin[1] += (ev.offsetY - half.H) * def.zoom
+  }
+
+  let downEv
+
+  const cToS = c => c.map(x => x.toPrecision()).join('+').replace('+-', '-')
+  document.getElementById(`dl-${id}`).onclick = _ => {
+      draw()
+      _.target.href = canvas.toDataURL()
+      _.target.download = `${id}_g${cToS(def.generator)}o${cToS(def.origin)}z${cToS([def.zoom])}.png`
+  }
+
+  canvas.oncontextmenu = e => false
+  canvas.onwheel = ev => {
+    zoomAround(.5 ** Math.sign(ev.wheelDelta), ev)
+    draw()
+    return false
+  }
+  canvas.onmousedown = e => { downEv = e }
+  canvas.onmouseup = upEv => {
+    const diff = getDiff(downEv, upEv)
+    if (diff.r > 5) {
+      def.origin = [
+        def.origin[0] + diff.x * def.zoom,
+        def.origin[1] - diff.y * def.zoom,
+      ]
+    } else {
+      zoomAround(upEv.which === 1 ? 0.5 : 2, upEv)
+    }
+    draw()
+  }
+
+  draw()
+
+  return {
+    onMove: handler => canvas.onmousemove = ev => (handler(ev), draw()),
+    pixelLocation: (x, y) => [
+      def.origin[0] + (x - half.W) * def.zoom,
+      def.origin[1] - (y - half.H) * def.zoom
+    ],
+    setGenerator: gen => (def.generator = gen, draw())
+  }
+}
+
+const shaders = [...document.querySelectorAll('script[type=webgl]')]
+const mandl = webglCanvas('mandl', shaders, { origin: [-0.7, 0.0], zoom: 0.0050, generator: [0, 0] })
+const julia = webglCanvas('julia', shaders, { origin: [-0.0, 0.0], zoom: 0.0065, generator: [-0.82, -0.2] })
+
+mandl.onMove(e => {
+  const C = mandl.pixelLocation(e.offsetX, e.offsetY)
+  document.title = C.map(v => v.toFixed(4))
+  julia.setGenerator(C)
+})
+
+</script>
+</body>
+</html>
