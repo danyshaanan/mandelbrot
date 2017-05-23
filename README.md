@@ -21,15 +21,16 @@ is an npmjs package for viewing and moving in the Mandelbrot set in a terminal, 
 
 ![The Mandelbrot set in nodejs](other/cli-mandelbrot.png?raw=true)
 
-#### javascript + canvas
-By [Leerons]
+#### canvas and glsl
+The Mandelbrot-Julia relation implemented in both canvas and glsl
+(OpenGL Shading Language over WebGL).
 
-Continuous, interactive, using HTML5's canvas object.
-[&#91;live demo&#93;](http://leerons.github.io/mandelbrot.html)
+glsl is much much faster, as can be seen in the similar implementations:
 
-![The Mandelbrot set in javascript + canvas](js-canvas/mandelbrot.png?raw=true)
+* [glsl](https://danyshaanan.github.io/mandelbrot/glsl)
+* [canvas](https://danyshaanan.github.io/mandelbrot/canvas)
 
-![The Mandelbrot set in javascript + canvas](js-canvas/mandelbrot_detail.png?raw=true)
+![The Mandelbrot set in glsl](docs/glsl.png?raw=true)
 
 #### python
 Continuous, Require PIL:
