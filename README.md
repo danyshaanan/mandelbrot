@@ -36,6 +36,11 @@ Continuous, Require PIL:
 
 ![The Mandelbrot set in Python](python/mandelbrot.png?raw=true)
 
+
+#### scala
+
+![The Mandelbrot set in Scala](scala/mandelbrot.png?raw=true)
+
 #### postscript
 By [Leerons]
 
