@@ -37,19 +37,9 @@ Continuous, Require PIL:
 
 ![The Mandelbrot set in Python](python/mandelbrot.png?raw=true)
 
-
 #### scala
 
 ![The Mandelbrot set in Scala](scala/mandelbrot.png?raw=true)
-
-#### postscript
-By [Leerons]
-
-Will get your printer huffing and puffing
-
-![The Mandelbrot set in postscript - minimal version](postscript/preview.minimal.png?raw=true)
-
-![The Mandelbrot set in postscript](postscript/preview.detail.png?raw=true)
 
 #### haskell
 ![The Mandelbrot set in haskell](haskell/mandelbrot_ascii.png?raw=true)
@@ -73,5 +63,13 @@ generates the Mandelbrot set out of five formulae - two to define the real and i
 two to define the real and imaginary parts of the iteration, and one to define the escaping condition.
 Those formulae can be found in the five cells marked with borders. All other cells are stretched from them.
 
+#### postscript
+By [Leerons]
+
+Will get your printer huffing and puffing
+
+![The Mandelbrot set in postscript - minimal version](postscript/preview.minimal.png?raw=true)
+
+![The Mandelbrot set in postscript](postscript/preview.detail.png?raw=true)
 
 [Leerons]: https://github.com/leerons
