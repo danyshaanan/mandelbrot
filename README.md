@@ -40,6 +40,9 @@ Continuous, Require PIL:
 ### [Haskell](haskell/)
 ![The Mandelbrot set in haskell](haskell/mandelbrot_ascii.png?raw=true)
 
+### [Go](go/)
+![The Mandelbrot set in go](go/go_ascii.png?raw=true)
+
 ### [Awk](awk/)
 ![The Mandelbrot set in awk](awk/mandelbrot_ascii.png?raw=true)
 
