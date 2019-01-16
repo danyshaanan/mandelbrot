@@ -1,24 +1,20 @@
 package main
+import ("fmt"; "strings"; "math/cmplx")
 
-import "fmt"
-import "math/cmplx"
+func iterations(z0 complex128, c int) int {
+  z := z0
+  for cmplx.Abs(z) < 2 && c > 0 {
+	z = z * z + z0
+	c--
+  }
+  return c
+}
 
 func main() {
-  for b := -2.; b < 2.; b += 0.1 {
-    for a := -2.; a < 2.; a += 0.1 {
-      z0 := complex(a, b)
-      z := z0
-      c := 0
-      for cmplx.Abs(z) < 2 && c < 10 {
-        z = z * z + z0
-        c++
-      }
-      if c < 10 {
-        fmt.Printf("%d%d", c, c)
-      } else {
-        fmt.Printf("  ")
-      }
+  for b := -2.1; b < 2.1; b += 0.1 {
+    for a := -2.1; a < 2.1; a += 0.1 {
+	  fmt.Printf(strings.Repeat(string(" .,:cloO0X"[iterations(complex(a, b), 9)]), 2))
     }
-    fmt.Println("")
+    fmt.Println()
   }
 }
