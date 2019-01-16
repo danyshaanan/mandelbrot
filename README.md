@@ -34,14 +34,14 @@ Continuous, Require PIL:
 
 ![The Mandelbrot set in Python](python/mandelbrot.png?raw=true)
 
+### [Go](go/)
+![The Mandelbrot set in go](go/mandelbrot.png?raw=true)
+
 ### [Scala](scala/)
 ![The Mandelbrot set in Scala](scala/mandelbrot.png?raw=true)
 
 ### [Haskell](haskell/)
 ![The Mandelbrot set in haskell](haskell/mandelbrot_ascii.png?raw=true)
-
-### [Go](go/)
-![The Mandelbrot set in go](go/go_ascii.png?raw=true)
 
 ### [Awk](awk/)
 ![The Mandelbrot set in awk](awk/mandelbrot_ascii.png?raw=true)
