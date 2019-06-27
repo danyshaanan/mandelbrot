@@ -30,7 +30,7 @@ uniform vec2 origin;
 uniform float zoom;
 
 vec2 z;
-float len, v, r = pow(2.0, 3.0);
+float len, r = pow(2.0, 3.0);
 
 vec2 transform(vec2 p) {
   return zoom * (p - size / 2.0) + origin;
@@ -71,10 +71,15 @@ vec4 hslToRgba(float h, float s, float l) {
   );
 }
 
+float h, s, l;
+float fadeRange = 50.0;
+
 vec4 color(float it) {
   if (it == 0.0) return vec4(0, 0, 0, 1);
-  v = 0.5 + 0.5 * sin(it);
-  return hslToRgba(it / 240.0, 1.0, it < 300.0 ? 0.5 : 0.5 - (it - 300.0) / 100.0 * 0.5);
+  h = it / 240.0;
+  s = 1.0;
+  l = min(1.0, (400.0 - it) / fadeRange) / 2.0;
+  return hslToRgba(h, s, l);
 }
 
 void main() {
