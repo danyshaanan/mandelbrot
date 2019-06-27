@@ -180,7 +180,7 @@ function webglCanvas(id, shaders, def) {
   draw()
 
   return {
-    onMove: handler => canvas.onmousemove = ev => (handler(ev), draw()),
+    onMove: handler => canvas.onmousemove = handler,
     pixelLocation: (x, y) => [
       def.origin[0] + (x - half.W) * def.zoom,
       def.origin[1] - (y - half.H) * def.zoom
