@@ -15,6 +15,8 @@ Right/left click to zoom<br/>
 Hover the Mandelbrot (left) to set the C value in the rational map z => z<sup>2</sup> + C used by the Julia (right)<br/>
 <br />
 Download: <a id=dl-mandl href=''>Mandelbrot</a> | <a id=dl-julia href=''>Julia</a>
+<br />
+<a href='index.htm'>Reset</a>
 </h4>
 <hr />
 <canvas id=mandl width=600 height=600></canvas>
@@ -129,6 +131,7 @@ function webglCanvas(id, shaders, def) {
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
 
   const draw = _ => {
+    if (id === 'mandl') document.location.hash = [def.zoom, def.origin[0], def.origin[1]].join(',')
     gl.uniform1f(state.zoom, def.zoom)
     gl.uniform2f(state.origin, ...def.origin)
     gl.uniform2f(state.generator, ...def.generator)
@@ -190,7 +193,8 @@ function webglCanvas(id, shaders, def) {
 }
 
 const shaders = [...document.querySelectorAll('script[type=webgl]')]
-const mandl = webglCanvas('mandl', shaders, { origin: [-0.7, 0.0], zoom: 0.0050, generator: [0, 0] })
+const [zoom, x, y] = document.location.hash.replace(/^#/, '').split(',')
+const mandl = webglCanvas('mandl', shaders, { origin: [+x || -0.7, +y || 0.0], zoom: +zoom || 0.0050, generator: [0, 0] })
 const julia = webglCanvas('julia', shaders, { origin: [-0.0, 0.0], zoom: 0.0065, generator: [-0.82, -0.2] })
 
 mandl.onMove(e => {
