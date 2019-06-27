@@ -131,7 +131,7 @@ function webglCanvas(id, shaders, def) {
   }
 
   const getDiff = (e1, e2) => {
-    const [x, y] = [e1.offsetX - e2.offsetX, e1.offsetY - e2.offsetY]
+    const [x, y] = [e1.layerX - e2.layerX, e1.layerY - e2.layerY]
     return { x, y, r: Math.hypot(x, y) }
   }
 
@@ -154,7 +154,7 @@ function webglCanvas(id, shaders, def) {
 
   canvas.oncontextmenu = e => false
   canvas.onwheel = ev => {
-    zoomAround(.5 ** Math.sign(ev.wheelDelta), ev)
+    zoomAround(.9 ** -Math.sign(ev.deltaY), ev)
     draw()
     return false
   }
