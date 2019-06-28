@@ -136,7 +136,6 @@ function webglCanvas(id, shaders, def, onLocChange) {
 
   gl.uniform2f(state.size, canvas.width, canvas.height)
   gl.uniform1f(state.i, def.i)
-  gl.uniform2f(state.origin, ...def.origin)
   gl.uniform1f(state.julia, id === 'julia')
 
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
