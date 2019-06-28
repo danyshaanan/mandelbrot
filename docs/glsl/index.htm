@@ -98,7 +98,7 @@ void main() {
 <script>
 'use strict'
 
-function webglCanvas(id, shaders, def) {
+function webglCanvas(id, shaders, def, onLocChange) {
   const canvas = document.getElementById(id)
   const half = { W: canvas.width / 2, H: canvas.height / 2 }
 
@@ -129,7 +129,6 @@ function webglCanvas(id, shaders, def) {
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
 
   const draw = _ => {
-    if (id === 'mandl') document.location.hash = [def.zoom, def.origin[0], def.origin[1]].join(',')
     gl.uniform1f(state.zoom, def.zoom)
     gl.uniform2f(state.origin, ...def.origin)
     gl.uniform2f(state.generator, ...def.generator)
@@ -161,6 +160,7 @@ function webglCanvas(id, shaders, def) {
   canvas.oncontextmenu = e => false
   canvas.onwheel = ev => {
     zoomAround(.9 ** -Math.sign(ev.deltaY), ev)
+    onLocChange()
     draw()
     return false
   }
@@ -175,6 +175,7 @@ function webglCanvas(id, shaders, def) {
     } else {
       zoomAround(upEv.which === 1 ? 0.5 : 2, upEv)
     }
+    onLocChange()
     draw()
   }
 
@@ -190,10 +191,14 @@ function webglCanvas(id, shaders, def) {
   }
 }
 
+const loc = def => [def.zoom, def.origin[0], def.origin[1]]
+const saveHash = _ => window.history.pushState('page2', 'Title', '?' + [...loc(mandlDef), ...loc(juliaDef)].join(','))
+const [mZ, mX, mY, jZ, jX, jY] = document.location.search.replace(/^\?/, '').split(',')
+const mandlDef = { origin: [+mX || -0.7, +mY || 0.0], zoom: +mZ || 0.0050, generator: [0, 0] }
+const juliaDef = { origin: [+jX || -0.0, +jY || 0.0], zoom: +jZ || 0.0065, generator: [+mX || -0.82, +mY || -0.2] }
 const shaders = [...document.querySelectorAll('script[type=webgl]')]
-const [zoom, x, y] = document.location.hash.replace(/^#/, '').split(',')
-const mandl = webglCanvas('mandl', shaders, { origin: [+x || -0.7, +y || 0.0], zoom: +zoom || 0.0050, generator: [0, 0] })
-const julia = webglCanvas('julia', shaders, { origin: [-0.0, 0.0], zoom: 0.0065, generator: [-0.82, -0.2] })
+const mandl = webglCanvas('mandl', shaders, mandlDef, saveHash)
+const julia = webglCanvas('julia', shaders, juliaDef, saveHash)
 
 mandl.onMove(e => {
   const C = mandl.pixelLocation(e.offsetX, e.offsetY)
