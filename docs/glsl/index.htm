@@ -206,8 +206,12 @@ function webglCanvas(id, shaders, def, onLocChange) {
   }
 }
 
+const saveHash = _ => {
+  const newHash = '?' + [...loc(mandlDef), ...loc(juliaDef)].join(',')
+  if (window.location.search !== newHash) window.history.pushState({}, '', newHash)
+}
+
 const loc = def => [def.zoom, def.origin[0], def.origin[1]]
-const saveHash = _ => window.history.pushState('page2', 'Title', '?' + [...loc(mandlDef), ...loc(juliaDef)].join(','))
 const [mZ, mX, mY, jZ, jX, jY] = document.location.search.replace(/^\?/, '').split(',')
 const mandlDef = { origin: [+mX || -0.7, +mY || 0.0], zoom: +mZ || 0.0050, generator: [0, 0] }
 const juliaDef = { origin: [+jX || -0.0, +jY || 0.0], zoom: +jZ || 0.0065, generator: [+mX || -0.82, +mY || -0.2] }
