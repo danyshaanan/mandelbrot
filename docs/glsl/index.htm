@@ -47,7 +47,7 @@ vec2 square(vec2 z) {
 }
 
 float iterations(vec2 c) {
-  z = julia ? c : vec2(0, 0);
+  z = c;
   for (int i = 0; i < 800; i++) {
     z = square(z) + (julia ? generator : c);
     len = length(z);
