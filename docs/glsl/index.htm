@@ -220,12 +220,7 @@ const shaders = [...document.querySelectorAll('script[type=webgl]')]
 const mandl = webglCanvas('mandl', shaders, mandlDef, saveHash)
 const julia = webglCanvas('julia', shaders, juliaDef, saveHash)
 
-mandl.onMove(e => {
-  const C = mandl.pixelLocation(e.offsetX, e.offsetY)
-  document.title = C.map(v => v.toFixed(4))
-  julia.setGenerator(C)
-})
-
+mandl.onMove(e => julia.setGenerator(mandl.pixelLocation(e.offsetX, e.offsetY)))
 document.querySelector('select').onchange = _ => (mandl.draw(), julia.draw())
 
 </script>
