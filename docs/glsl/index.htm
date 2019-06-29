@@ -137,6 +137,7 @@ function webglCanvas(id, shaders, def, onLocChange) {
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
 
   const draw = _ => {
+    onLocChange()
     gl.uniform1f(state.theme, +document.querySelector('select').value)
     gl.uniform1f(state.zoom, def.zoom)
     gl.uniform2f(state.origin, ...def.origin)
@@ -157,8 +158,6 @@ function webglCanvas(id, shaders, def, onLocChange) {
     def.origin[1] += (ev.offsetY - half.H) * def.zoom
   }
 
-  let downEv
-
   const cToS = c => c.map(x => x.toPrecision()).join('+').replace('+-', '-')
   document.getElementById(`dl-${id}`).onclick = _ => {
       draw()
@@ -166,25 +165,31 @@ function webglCanvas(id, shaders, def, onLocChange) {
       _.target.download = `${id}_g${cToS(def.generator)}o${cToS(def.origin)}z${cToS([def.zoom])}.png`
   }
 
+  let down, moveHandler = _ => _
+
   canvas.oncontextmenu = e => false
   canvas.onwheel = ev => {
     zoomAround(.9 ** -Math.sign(ev.deltaY), ev)
-    onLocChange()
     draw()
     return false
   }
-  canvas.onmousedown = e => { downEv = e }
-  canvas.onmouseup = upEv => {
-    const diff = getDiff(downEv, upEv)
-    if (diff.r > 5) {
-      def.origin = [
-        def.origin[0] + diff.x * def.zoom,
-        def.origin[1] - diff.y * def.zoom,
-      ]
-    } else {
-      zoomAround(upEv.which === 1 ? 0.5 : 2, upEv)
+  canvas.onmousedown = event => {
+    down = { event, origin: [...def.origin], moved: false}
+  }
+  canvas.onmouseup = event => {
+    if (!down.moved) {
+      zoomAround(event.which === 1 ? 0.5 : 2, event)
+      draw()
     }
-    onLocChange()
+    down = null
+  }
+  canvas.onmousemove = event => {
+    if (!down) return moveHandler(event)
+    const { x, y, r } = getDiff(down.event, event)
+    if (r < 5) return
+    def.origin[0] = down.origin[0] + x * def.zoom
+    def.origin[1] = down.origin[1] - y * def.zoom
+    down.moved = true
     draw()
   }
 
@@ -192,7 +197,7 @@ function webglCanvas(id, shaders, def, onLocChange) {
 
   return {
     draw,
-    onMove: handler => canvas.onmousemove = handler,
+    onMove: handler => moveHandler = handler,
     pixelLocation: (x, y) => [
       def.origin[0] + (x - half.W) * def.zoom,
       def.origin[1] - (y - half.H) * def.zoom
