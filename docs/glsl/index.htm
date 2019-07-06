@@ -30,8 +30,7 @@ uniform vec2 origin;
 uniform float zoom;
 uniform float theme;
 
-vec2 z;
-float len, r = pow(2.0, 3.0);
+float r = pow(2.0, 3.0);
 
 vec2 transform(vec2 p) {
   return zoom * (p - size / 2.0) + origin;
@@ -42,17 +41,17 @@ vec2 square(vec2 z) {
 }
 
 float iterations(vec2 c) {
-  z = c;
+  vec2 z = c;
   for (int i = 0; i < 800; i++) {
     z = square(z) + (julia ? generator : c);
-    len = length(z);
+    float len = length(z);
     if (len > r) return float(i) - log(len) / log(r);
   }
   return 0.0;
 }
 
-float hue2c(float p, float q, float t) {
-  t = mod(t, 6.0);
+float hue2c(float p, float q, float t, int modifier) {
+  t = mod(t + float(modifier), 6.0);
   if (t < 1.0) return p + (q - p) * t;
   if (t < 3.0) return q;
   if (t < 4.0) return p + (q - p) * (4.0 - t);
@@ -63,13 +62,8 @@ vec4 hslToRgba(float h, float s, float l) {
   if (s == 0.0) return vec4(l, l, l, 1.0);
   float q = l < 0.5 ? l * (1.0 + s) : l + s - l * s;
   float p = 2.0 * l - q;
-  h = h * 6.0;
-  return vec4(
-    hue2c(p, q, h + 2.0),
-    hue2c(p, q, h      ),
-    hue2c(p, q, h + 4.0),
-    1
-  );
+  h *= 6.0;
+  return vec4(hue2c(p, q, h, 2), hue2c(p, q, h, 0), hue2c(p, q, h, 4), 1);
 }
 
 vec4 color(float it) {
