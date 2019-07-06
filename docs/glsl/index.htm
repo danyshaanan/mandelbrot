@@ -189,8 +189,7 @@ const stateToHash = ({ mandl, julia }) => '?' + [mandl.x, mandl.y, mandl.z, juli
 
 //---------------------------------------------------------------//
 
-const Pair = _ => {
-  const shaders = [...document.querySelectorAll('script[type=webgl]')]
+const Pair = shaders => {
   const saveHash = _ => {
     const newHash = stateToHash({ mandl: mandl.def, julia: julia.def })
     if (window.location.search !== newHash) window.history.pushState({}, '', newHash)
@@ -209,7 +208,7 @@ const Pair = _ => {
 
 //---------------------------------------------------------------//
 
-const apply = Pair()
+const apply = Pair([...document.querySelectorAll('script[type=webgl]')])
 
 const themes = ['Color', 'Greyscale']
 const states = ['-0.7,0,0.005,0,0,0.005', '-1.1848,0.3029,1.65e-8,5e-3,2e-3,2e-4', '-1.7496,6e-5,2e-7,5e-2,3e-2,1e-4']
