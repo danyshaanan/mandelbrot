@@ -11,7 +11,7 @@ function Canvas(id, generator, def) {
     def.b -= mouseEvent.offsetY * def.zoom
   }
   const getDiff = (e1, e2) => {
-    const [x, y] = [e1.offsetX - e2.offsetX, e1.offsetY - e2.offsetY]
+    const [x, y] = [e1.layerX - e2.layerX, e1.layerY - e2.layerY]
     return { x, y, r: Math.hypot(x, y) }
   }
 
@@ -55,7 +55,7 @@ function Canvas(id, generator, def) {
     draw()
   }
   canvas.onwheel = e => {
-    zoomAround(Math.pow(2, -Math.sign(e.wheelDelta)), e)
+    zoomAround(.5 ** -Math.sign(e.deltaY), e)
     draw()
     return false
   }
