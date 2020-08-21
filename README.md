@@ -1,6 +1,6 @@
 # mandelbrot
 
-Renderings of the Mandelbrot set in various languages
+Renderings of the Mandelbrot set in various languages. Some are interactive and pretty, and some are no more than coding exercises. If you wanna skip the details and just play with the best one, [click here](https://danyshaanan.github.io/mandelbrot/glsl).
 
 ### [C++](cpp/)
 Continuous, interactive.
