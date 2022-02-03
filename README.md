@@ -43,6 +43,9 @@ Continuous, Require PIL:
 ### [Haskell](haskell/)
 ![The Mandelbrot set in haskell](haskell/mandelbrot_ascii.png?raw=true)
 
+### [Rust](rust/)
+![The Mandelbrot set in Rust](rust/mandelbrot_ascii.png?raw=true)
+
 ### [Awk](awk/)
 ![The Mandelbrot set in awk](awk/mandelbrot_ascii.png?raw=true)
 
